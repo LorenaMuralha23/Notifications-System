@@ -13,9 +13,8 @@ public class RabbitMQConstants {
     public static final String ORDER_EXCHANGE_NAME = "order-notifications-exchange";
     public static final String PAYMENT_EXCHANGE_NAME = "payment-notifications-exchange";
     
-    //Binding's names
-    public static final String ORDER_CONFIRMED_BINDING = "order.confirmed";
-    public static final String ORDER_CANCELLED_BINDING = "order.cancelled";
-    public static final String ORDER_CREATED_BINDING = "order.created";
+    public static final String ORDER_CONFIRMED_ROUTING_KEY = "order.confirmed";
+    public static final String ORDER_CANCELLED_ROUTING_KEY = "order.cancelled";
+    public static final String ORDER_CREATED_ROUTING_KEY = "order.created";
     
 }
