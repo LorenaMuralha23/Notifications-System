@@ -1,6 +1,6 @@
 package com.kingcode.demo.entities;
 
-import com.kingcode.demo.enums.EventType;
+import com.kingcode.demo.enums.DeliveryMethod;
 import com.kingcode.demo.enums.NotificationStatus;
 import java.util.Objects;
 
@@ -9,16 +9,16 @@ public class Notification {
     private Integer id;
     private String title;
     private String body;
-    private EventType eventType;
     private Integer idUserToSend;
     private NotificationStatus status;
+    private DeliveryMethod deliveryMethod;
 
-    public Notification(String title, String body, EventType eventType, Integer idUserToSend, NotificationStatus status) {
+    public Notification(String title, String body, Integer idUserToSend, NotificationStatus status, DeliveryMethod method) {
         this.title = title;
         this.body = body;
-        this.eventType = eventType;
         this.idUserToSend = idUserToSend;
         this.status = status;
+        this.deliveryMethod = method;
     }
 
     public Notification() {
@@ -38,18 +38,6 @@ public class Notification {
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    public EventType getEventType() {
-        return eventType;
-    }
-    
-    public EventType getEventTypeByCode(Integer code){
-        return EventType.fromCode(code);
-    }
-
-    public void setEventTypeByCode(Integer eventType) {
-        this.eventType = EventType.fromCode(eventType);
     }
 
     public Integer getIdUserToSend() {
@@ -75,6 +63,19 @@ public class Notification {
     public Integer getId() {
         return id;
     }
+
+    public DeliveryMethod getDeliveryMethodByCode(int code) {
+        return DeliveryMethod.fromCode(code);
+    }
+    
+    public DeliveryMethod getDeliveryMethod(){
+        return this.deliveryMethod;
+    }
+    
+    public void setDeliveryMethod(int code) {
+        this.deliveryMethod = DeliveryMethod.fromCode(code);
+    }
+    
 
     @Override
     public int hashCode() {

@@ -32,34 +32,31 @@ public class RabbitMQConnection {
     @PostConstruct
     private void connectionSettings(){
         //creating queues
-        Queue orderCreatedQueue = createQueue(RabbitMQConstants.ORDER_CREATED_QUEUE_NAME);
-        Queue orderConfirmedQueue = createQueue(RabbitMQConstants.ORDER_CONFIRMED_QUEUE_NAME);
-        Queue orderCancelledQueue = createQueue(RabbitMQConstants.ORDER_CANCELLED_QUEUE_NAME);
-        
-        Queue paymentStatusQueue = createQueue(RabbitMQConstants.PAYMENT_STATUS_QUEUE_NAME);
-        
+        Queue emailQueue = createQueue(RabbitMQConstants.EMAIL_QUEUE_NAME);
+        Queue smsQueue = createQueue(RabbitMQConstants.SMS_QUEUE_NAME);
+        Queue pushQueue = createQueue(RabbitMQConstants.PUSH_QUEUE_NAME);
         
         //creating Exchange
-        DirectExchange orderExchange = createExchange(RabbitMQConstants.ORDER_EXCHANGE_NAME);
-        DirectExchange paymentExchange = createExchange(RabbitMQConstants.PAYMENT_EXCHANGE_NAME);
+        DirectExchange emailExchange = createExchange(RabbitMQConstants.EMAIL_EXCHANGE_NAME);
+        DirectExchange smsExchange = createExchange(RabbitMQConstants.SMS_EXCHANGE_NAME);
+        DirectExchange pushExchange = createExchange(RabbitMQConstants.PUSH_EXCHANGE_NAME);
         
         //creating Bindings
-        Binding bindigOrderCreated = createBinding(orderCreatedQueue.getName(), orderExchange.getName(), "order.created");
-        Binding bindigOrderConfirmed = createBinding(orderConfirmedQueue.getName(), orderExchange.getName(), "order.confirmed");
-        Binding bindigOrderCancelled = createBinding(orderCancelledQueue.getName(), orderExchange.getName(), "order.cancelled");
-        Binding bindigPaymentStatus = createBinding(paymentStatusQueue.getName(), paymentExchange.getName(), "payment.status");
+        Binding bindingEmail = createBinding(emailQueue.getName(), emailExchange.getName(), RabbitMQConstants.EMAIL_ROUTING_KEY);
+        Binding bindingSms = createBinding(smsQueue.getName(), smsExchange.getName(), RabbitMQConstants.SMS_ROUTING_KEY);
+        Binding bindingPush = createBinding(pushQueue.getName(), pushExchange.getName(), RabbitMQConstants.PUSH_ROUTING_KEY);        
         
-        this.admin.declareQueue(orderCreatedQueue);
-        this.admin.declareQueue(orderConfirmedQueue);
-        this.admin.declareQueue(orderCancelledQueue);
-        this.admin.declareQueue(paymentStatusQueue);
+        this.admin.declareQueue(emailQueue);
+        this.admin.declareQueue(smsQueue);
+        this.admin.declareQueue(pushQueue);
         
-        this.admin.declareExchange(orderExchange);
-        this.admin.declareExchange(paymentExchange);
+        this.admin.declareExchange(emailExchange);
+        this.admin.declareExchange(smsExchange);
+        this.admin.declareExchange(pushExchange);
         
-        this.admin.declareBinding(bindigOrderCreated);
-        this.admin.declareBinding(bindigOrderConfirmed);
-        this.admin.declareBinding(bindigOrderCancelled);
-        this.admin.declareBinding(bindigPaymentStatus);
+        this.admin.declareBinding(bindingEmail);
+        this.admin.declareBinding(bindingSms);
+        this.admin.declareBinding(bindingPush);
+       
     }
 }

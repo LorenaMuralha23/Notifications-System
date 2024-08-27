@@ -1,15 +1,14 @@
 package com.kingcode.demo.dtos;
 
-import com.kingcode.demo.enums.EventType;
 import com.kingcode.demo.enums.NotificationStatus;
 import java.io.Serializable;
 
 public class NotificationDTO implements Serializable{
     private String title;
     private String body;
-    private Integer eventType;
     private Integer idUserToSend;
     private Integer statusCode;
+    private Integer deliveryMethodCode;
 
     public NotificationDTO() {
     }
@@ -30,18 +29,6 @@ public class NotificationDTO implements Serializable{
         this.body = body;
     }
 
-    public EventType getEventTypeByCode(int code) {
-        return EventType.fromCode(code);
-    }
-
-    public Integer getEventTypeCode(){
-        return this.eventType;
-    }
-    
-    public void setEventType(Integer eventCode) {
-        this.eventType = eventCode;
-    }
-
     public Integer getIdUserToSend() {
         return idUserToSend;
     }
@@ -57,6 +44,13 @@ public class NotificationDTO implements Serializable{
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
     }
-    
+
+    public Integer getDeliveryMethodCode() {
+        return deliveryMethodCode;
+    }
+
+    public void setDeliveryMethodCode(Integer deliveryMethodCode) {
+        this.deliveryMethodCode = deliveryMethodCode;
+    }
     
 }

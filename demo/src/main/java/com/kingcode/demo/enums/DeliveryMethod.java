@@ -1,14 +1,14 @@
 package com.kingcode.demo.enums;
 
-public enum EventType {
+public enum DeliveryMethod {
     
-    CREATED(1),
-    CONFIRMED(2),
-    CANCELLED(3);
+    EMAIL(1),
+    SMS(2),
+    PUSH(3);
 
     private final int code;
 
-    EventType(int code) {
+    DeliveryMethod(int code) {
         this.code = code;
     }
 
@@ -16,8 +16,8 @@ public enum EventType {
         return code;
     }
 
-    public static EventType fromCode(int code) {
-        for (EventType status : EventType.values()) {
+    public static DeliveryMethod fromCode(int code) {
+        for (DeliveryMethod status : DeliveryMethod.values()) {
             if (status.getCode() == code) {
                 return status;
             }
