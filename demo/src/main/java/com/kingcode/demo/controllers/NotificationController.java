@@ -1,8 +1,7 @@
 package com.kingcode.demo.controllers;
 
-import com.kingcode.demo.dtos.NotificationDTO;
 import com.kingcode.demo.service.NotificationService;
-import java.util.concurrent.CompletableFuture;
+import com.mycompany.main.lib.dtos.NotificationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +23,14 @@ public class NotificationController {
         }
         
         if (notificationDTO.getBody().equals("")) {
+            throw new Exception();
+        }
+        
+        if (notificationDTO.getFrom().equals("")){
+            throw new Exception();
+        }
+        
+        if (notificationDTO.getToSend().equals("")){
             throw new Exception();
         }
         

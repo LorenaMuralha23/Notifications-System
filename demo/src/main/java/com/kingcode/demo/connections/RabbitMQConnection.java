@@ -1,6 +1,6 @@
 package com.kingcode.demo.connections;
 
-import com.kingcode.demo.constants.RabbitMQConstants;
+import com.mycompany.main.lib.constants.RabbitMQConstants;
 import jakarta.annotation.PostConstruct;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Binding;

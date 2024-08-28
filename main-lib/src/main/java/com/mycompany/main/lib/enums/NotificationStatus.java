@@ -1,14 +1,14 @@
-package com.kingcode.demo.enums;
+package com.mycompany.main.lib.enums;
 
-public enum DeliveryMethod {
+public enum NotificationStatus {
     
-    EMAIL(1),
-    SMS(2),
-    PUSH(3);
+    DELIVERED(1),
+    READ(2),
+    UNREAD(3);
 
     private final int code;
 
-    DeliveryMethod(int code) {
+    NotificationStatus(int code) {
         this.code = code;
     }
 
@@ -16,8 +16,8 @@ public enum DeliveryMethod {
         return code;
     }
 
-    public static DeliveryMethod fromCode(int code) {
-        for (DeliveryMethod status : DeliveryMethod.values()) {
+    public static NotificationStatus fromCode(int code) {
+        for (NotificationStatus status : NotificationStatus.values()) {
             if (status.getCode() == code) {
                 return status;
             }

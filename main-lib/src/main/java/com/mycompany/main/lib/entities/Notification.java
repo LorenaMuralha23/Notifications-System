@@ -1,7 +1,7 @@
-package com.kingcode.demo.entities;
+package com.mycompany.main.lib.entities;
 
-import com.kingcode.demo.enums.DeliveryMethod;
-import com.kingcode.demo.enums.NotificationStatus;
+import com.mycompany.main.lib.enums.DeliveryMethod;
+import com.mycompany.main.lib.enums.NotificationStatus;
 import java.util.Objects;
 
 public class Notification {

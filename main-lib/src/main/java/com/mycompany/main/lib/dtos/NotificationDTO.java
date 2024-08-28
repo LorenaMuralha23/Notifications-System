@@ -1,14 +1,15 @@
-package com.kingcode.demo.dtos;
+package com.mycompany.main.lib.dtos;
 
-import com.kingcode.demo.enums.NotificationStatus;
 import java.io.Serializable;
 
 public class NotificationDTO implements Serializable{
     private String title;
     private String body;
-    private Integer idUserToSend;
+    private String from;
+    private String toSend;
     private Integer statusCode;
     private Integer deliveryMethodCode;
+    
 
     public NotificationDTO() {
     }
@@ -29,12 +30,20 @@ public class NotificationDTO implements Serializable{
         this.body = body;
     }
 
-    public Integer getIdUserToSend() {
-        return idUserToSend;
+    public String getFrom() {
+        return from;
     }
 
-    public void setIdUserToSend(Integer idUserToSend) {
-        this.idUserToSend = idUserToSend;
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getToSend() {
+        return toSend;
+    }
+
+    public void setToSend(String toSend) {
+        this.toSend = toSend;
     }
 
     public Integer getStatusCode() {

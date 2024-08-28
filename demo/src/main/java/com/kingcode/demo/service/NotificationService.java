@@ -1,7 +1,7 @@
 package com.kingcode.demo.service;
 
-import com.kingcode.demo.constants.RabbitMQConstants;
-import com.kingcode.demo.dtos.NotificationDTO;
+import com.mycompany.main.lib.constants.RabbitMQConstants;
+import com.mycompany.main.lib.dtos.NotificationDTO;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

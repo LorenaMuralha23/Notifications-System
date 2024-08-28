@@ -1,4 +1,4 @@
-package com.kingcode.demo.constants;
+package com.mycompany.main.lib.constants;
 
 public class RabbitMQConstants {
     
