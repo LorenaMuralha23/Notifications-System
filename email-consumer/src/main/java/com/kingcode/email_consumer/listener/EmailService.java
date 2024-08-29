@@ -1,5 +1,6 @@
 package com.kingcode.email_consumer.listener;
 
+import com.mycompany.main.lib.dtos.NotificationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,20 +12,22 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendEmail(String from, String toEmail, String subject, String body) {
+    public void sendEmail(NotificationDTO notificationDTO) {
         try {
             SimpleMailMessage messageToSend = new SimpleMailMessage();
 
-            messageToSend.setFrom(from);
-            messageToSend.setTo(toEmail);
-            messageToSend.setSubject(subject);
-            messageToSend.setText(body);
+            messageToSend.setFrom(notificationDTO.getFrom());
+            messageToSend.setTo(notificationDTO.getToSend());
+            messageToSend.setSubject(notificationDTO.getTitle());
+            messageToSend.setText(notificationDTO.getBody());
 
             mailSender.send(messageToSend);
 
             System.out.println("Email sended successfully!");
         } catch (Exception e) {
             System.out.println("Error sending the message!");
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
         }
     }
 

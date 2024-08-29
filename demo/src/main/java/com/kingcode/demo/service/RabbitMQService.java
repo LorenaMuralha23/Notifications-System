@@ -24,14 +24,15 @@ public class RabbitMQService {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 String messageJSON = this.objectMapper.writeValueAsString(message);
-                String messageID = UUID.randomUUID().toString();
-                CorrelationData correlationData = new CorrelationData(messageID);
                 
                 CompletableFuture<Boolean> confirmationFuture = new CompletableFuture<>();
                 
                 System.out.println("[SERVER SAYS] SENDING MESSAGE... [SERVER SAYS]");
                 
-                this.rabbitTemplate.convertAndSend(exchange, routingKey, messageJSON);
+                this.rabbitTemplate.convertAndSend(exchange, routingKey, messageJSON, m -> {
+                    m.getMessageProperties().setContentType("application/json");
+                    return m;
+                });
 
                 return confirmationFuture.join();
             } catch (JsonProcessingException ex) {

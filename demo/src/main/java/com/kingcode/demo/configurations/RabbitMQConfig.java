@@ -1,12 +1,10 @@
 package com.kingcode.demo.configurations;
 
-import java.util.concurrent.CompletableFuture;
 import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.core.RabbitTemplate.ConfirmCallback;
 import org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnsCallback;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
