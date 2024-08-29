@@ -1,12 +1,13 @@
 package com.kingcode.email_consumer.listener;
 
+import com.kingcode.email_consumer.service.EmailService;
 import com.mycompany.main.lib.constants.RabbitMQConstants;
 import com.mycompany.main.lib.dtos.NotificationDTO;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
 
-@Controller
+@Component
 public class Listener {
 
     @Autowired
