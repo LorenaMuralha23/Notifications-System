@@ -1,4 +1,4 @@
-package com.kingcode.email_consumer.config;
+package com.kingcode.sms_consumer.config;
 
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

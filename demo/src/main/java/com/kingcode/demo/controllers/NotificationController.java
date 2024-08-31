@@ -26,10 +26,6 @@ public class NotificationController {
             throw new Exception();
         }
         
-        if (notificationDTO.getFrom().equals("")){
-            throw new Exception();
-        }
-        
         if (notificationDTO.getToSend().equals("")){
             throw new Exception();
         }

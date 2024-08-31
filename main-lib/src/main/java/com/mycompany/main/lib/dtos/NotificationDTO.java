@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class NotificationDTO implements Serializable{
     private String title;
     private String body;
-    private String from;
     private String toSend;
     private Integer statusCode;
     private Integer deliveryMethodCode;
@@ -28,14 +27,6 @@ public class NotificationDTO implements Serializable{
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
     }
 
     public String getToSend() {
