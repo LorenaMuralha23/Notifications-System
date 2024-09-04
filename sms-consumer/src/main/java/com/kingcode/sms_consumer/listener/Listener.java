@@ -15,10 +15,7 @@ public class Listener {
     
     @RabbitListener(queues = RabbitMQConstants.SMS_QUEUE_NAME)
     public void receiveMessage(NotificationDTO notificationDTO) throws Exception{
-        System.out.println("GOT A MESSAGE!");
-        System.out.println("Title: " + notificationDTO.getTitle());
-        System.out.println("Body: " + notificationDTO.getBody());
-        service.sendSMS(notificationDTO.getToSend(), "Hello, World!");
+        service.sendSMS(notificationDTO.getToSend(), notificationDTO.getBody());
     }
     
 }

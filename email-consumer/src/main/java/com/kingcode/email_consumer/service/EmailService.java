@@ -1,11 +1,19 @@
 package com.kingcode.email_consumer.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mycompany.main.lib.constants.RabbitMQConstants;
 import com.mycompany.main.lib.dtos.NotificationDTO;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +24,12 @@ public class EmailService {
 
     @Autowired
     private JavaMailSenderImpl mailSenderImpl;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     private String username;
     private String password;
@@ -35,15 +49,17 @@ public class EmailService {
     }
 
     public void sendEmail(NotificationDTO notificationDTO) {
+        boolean emailSent = false;
         try {
+            System.out.println("[EMAIL SERVICE] Sending e-mail...[EMAIL SERVICE]");
             SimpleMailMessage messageToSend = new SimpleMailMessage();
 
             if (username == null || password == null) {
-                throw new IllegalStateException("[EMAIL SERVICE ERROR] Illegal Credentials [username] [password] [EMAIL SERVICE ERROR]");
+                throw new IllegalStateException("[EMAIL SERVICE ERROR] Illegal Credentials [EMAIL SERVICE ERROR]");
             }
-            
+
             if (this.username.equals("your-email@gmail.com") || this.password.equals("your-password")) {
-                throw new IllegalStateException("[ERROR] Creaditals are needed [ERROR]");
+                throw new IllegalStateException("[EMAIL SERVICE ERROR] Creaditals are needed [EMAIL SERVICE ERROR]");
             }
 
             messageToSend.setFrom(this.username);
@@ -52,12 +68,32 @@ public class EmailService {
             messageToSend.setText(notificationDTO.getBody());
 
             mailSender.send(messageToSend);
+            emailSent = true;
+        } catch (IllegalStateException e) {
+            System.out.println("[EMAIL SERVICE ERROR] An state error ocurred while sending the email. Trying again... [EMAIL SERVICE ERROR]");
+            throw e;
+        } catch (MailException e) {
+            System.out.println("[EMAIL SERVICE ERROR] An email error ocurred while sending the email. Trying again... [EMAIL SERVICE ERROR]\n");
+            throw e;
+        } catch (Exception e) {
+            System.out.println("[EMAIL SERVICE ERROR] An error ocurred while sending the email.  Trying again... [EMAIL SERVICE ERROR]\n");
+            throw e;
+        } finally {
+            try {
+                String responseJSON = Boolean.toString(emailSent);
+                System.out.println("Response json: " + responseJSON);
+                rabbitTemplate.convertAndSend(RabbitMQConstants.EMAIL_RESPONSE_QUEUE_NAME, responseJSON);
+                System.out.println("[EMAIL SERVICE] Response sent to the reply queue [EMAIL SERVICE]");
 
-            System.out.println("[EMAIL SERVICE] Email sent successfully [EMAIL SERVICE]");
-        } catch (IllegalStateException | MailException e) {
-            System.out.println("[EMAIL SERVICE ERROR] An error ocurred while sending the email [EMAIL SERVICE ERROR]");
-            System.out.println(e.getMessage());
+            } catch (AmqpException e) {
+                System.out.println("[EMAIL SERVICE ERROR] Failed to process response message.  Trying again... [EMAIL SERVICE ERROR]");
+                throw e;
+            }
         }
+    }
+
+    public void recoverMessage() {
+        System.out.println("[EMAIL SERVICE ERROR] ALL RETRIES FAILED. PLEASE, TRY AGAIN LATER. [EMAIL SERVICE ERROR]");
     }
 
 }

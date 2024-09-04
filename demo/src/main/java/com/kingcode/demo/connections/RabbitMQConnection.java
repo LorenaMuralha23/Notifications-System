@@ -31,27 +31,38 @@ public class RabbitMQConnection {
 
     @PostConstruct
     private void connectionSettings() throws Exception {
-        System.out.println("Tentando configurar RabbitMQ...");
         //creating queues
         Queue emailQueue = createQueue(RabbitMQConstants.EMAIL_QUEUE_NAME);
+        Queue emailResponseQueue = createQueue(RabbitMQConstants.EMAIL_RESPONSE_QUEUE_NAME);
         Queue smsQueue = createQueue(RabbitMQConstants.SMS_QUEUE_NAME);
+        Queue smsResponseQueue = createQueue(RabbitMQConstants.SMS_RESPONSE_QUEUE_NAME);
 
         //creating Exchange
         DirectExchange emailExchange = createExchange(RabbitMQConstants.EMAIL_EXCHANGE_NAME);
+        DirectExchange emailResponseExchange = createExchange(RabbitMQConstants.EMAIL_RESPONSE_EXCHANGE_NAME);
         DirectExchange smsExchange = createExchange(RabbitMQConstants.SMS_EXCHANGE_NAME);
+        DirectExchange smsResponseExchange = createExchange(RabbitMQConstants.SMS_RESPONSE_EXCHANGE_NAME);
 
         //creating Bindings
         Binding bindingEmail = createBinding(emailQueue.getName(), emailExchange.getName(), RabbitMQConstants.EMAIL_ROUTING_KEY);
+        Binding bindingEmailResponse = createBinding(emailResponseQueue.getName(), emailResponseExchange.getName(), RabbitMQConstants.EMAIL_RESPONSE_ROUTING_KEY);
         Binding bindingSms = createBinding(smsQueue.getName(), smsExchange.getName(), RabbitMQConstants.SMS_ROUTING_KEY);
+        Binding bindingSmsResponse = createBinding(smsResponseQueue.getName(), smsResponseExchange.getName(), RabbitMQConstants.SMS_RESPONSE_ROUTING_KEY);
 
         this.admin.declareQueue(emailQueue);
+        this.admin.declareQueue(emailResponseQueue);
         this.admin.declareQueue(smsQueue);
+        this.admin.declareQueue(smsResponseQueue);
 
         this.admin.declareExchange(emailExchange);
+        this.admin.declareExchange(emailResponseExchange);
         this.admin.declareExchange(smsExchange);
+        this.admin.declareExchange(smsResponseExchange);
 
         this.admin.declareBinding(bindingEmail);
+        this.admin.declareBinding(bindingEmailResponse);
         this.admin.declareBinding(bindingSms);
+        this.admin.declareBinding(bindingSmsResponse);
 
     }
     
