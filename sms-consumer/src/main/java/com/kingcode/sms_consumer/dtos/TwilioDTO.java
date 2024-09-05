@@ -1,28 +1,18 @@
-package com.kingcode.sms_consumer.config;
+package com.kingcode.sms_consumer.dtos;
 
-import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.Serializable;
 
-@Component
-public class TwilioConfig {
+public class TwilioDTO implements Serializable{
     
+    @JsonProperty("ACCOUNT_SID")
     private String ACCOUNT_SID;
     
+    @JsonProperty("AUTH_TOKEN")
     private String AUTH_TOKEN;
     
+    @JsonProperty("PHONE_NUMBER")
     private String PHONE_NUMBER;
-
-    public TwilioConfig(String ACCOUNT_SID, String AUTH_TOKEN, String PHONE_NUMBER) {
-        this.ACCOUNT_SID = ACCOUNT_SID;
-        this.AUTH_TOKEN = AUTH_TOKEN;
-        this.PHONE_NUMBER = PHONE_NUMBER;
-    }
-
-    public TwilioConfig() {
-    }
-    
-    public String getTwillioPhoneNumber(){
-        return this.PHONE_NUMBER;
-    }
 
     public String getACCOUNT_SID() {
         return ACCOUNT_SID;
@@ -49,5 +39,5 @@ public class TwilioConfig {
     }
     
     
-    
+
 }

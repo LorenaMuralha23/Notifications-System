@@ -92,8 +92,5 @@ public class EmailService {
         }
     }
 
-    public void recoverMessage() {
-        System.out.println("[EMAIL SERVICE ERROR] ALL RETRIES FAILED. PLEASE, TRY AGAIN LATER. [EMAIL SERVICE ERROR]");
-    }
 
 }

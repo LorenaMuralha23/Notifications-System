@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Listener {
-    
+
     @Autowired
     private SMSService service;
-    
+
     @RabbitListener(queues = RabbitMQConstants.SMS_QUEUE_NAME)
-    public void receiveMessage(NotificationDTO notificationDTO) throws Exception{
+    public void receiveMessage(NotificationDTO notificationDTO) throws Exception {
         service.sendSMS(notificationDTO.getToSend(), notificationDTO.getBody());
     }
-    
+
 }

@@ -2,6 +2,7 @@ package com.kingcode.sms_consumer.service;
 
 import com.kingcode.sms_consumer.config.TwilioConfig;
 import com.mycompany.main.lib.constants.RabbitMQConstants;
+import com.twilio.Twilio;
 import com.twilio.exception.ApiException;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
@@ -13,18 +14,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class SMSService {
 
+    @Autowired
     private TwilioConfig twilioConfig;
     
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    public SMSService(TwilioConfig twilioConfig) {
-        this.twilioConfig = twilioConfig;
+    
+    //Aqui será legal ter um retry
+    public void configureTwilio(String accountSid, String authToken, String phoneNumber){
+        twilioConfig.setACCOUNT_SID(accountSid);
+        twilioConfig.setAUTH_TOKEN(authToken);
+        twilioConfig.setPHONE_NUMBER(phoneNumber);
+        Twilio.init(accountSid, authToken);
+        System.out.println("[SMS SERVICE SAYS] CREDENTIALS CONFIGURED SUCCESSFULLY [SMS SERVICE SAYS]");
     }
 
     public void sendSMS(String numberToSend, String smsMessage) throws Exception {
         boolean smsSent = false;
+        
         try {
             if (twilioConfig.getTwillioPhoneNumber() == null || twilioConfig.getTwillioPhoneNumber().isEmpty()) {
                 throw new IllegalArgumentException("[SERVICE SAYS] Invalid twillion number [SERVICE SAYS]");
@@ -36,24 +43,20 @@ public class SMSService {
 
             Message message = Message.creator(
                     new PhoneNumber(numberToSend),
-                    new PhoneNumber(twilioConfig.getTwillioPhoneNumber()),
+                    new PhoneNumber(this.twilioConfig.getTwillioPhoneNumber()),
                     smsMessage
             ).create();
 
             smsSent = true;
         } catch (IllegalArgumentException e) {
             System.out.println("[ERROR] Invalid parameter: " + e.getMessage());
-            throw e;
         } catch (ApiException e) {
             System.out.println("[ERROR] Twilio API Error: " + e.getMessage());
-            throw e;
         } catch (Exception e) {
             System.out.println("[ERROR] Unexpected error occurred while sending the message: " + e.getMessage());
-            throw e;
         } finally {
             try {
                 String responseJSON = Boolean.toString(smsSent);
-                System.out.println(responseJSON);
                 rabbitTemplate.convertAndSend(RabbitMQConstants.SMS_RESPONSE_QUEUE_NAME, responseJSON);
                 System.out.println("[SMS SERVICE] Response sent to the reply queue [SMS SERVICE]");
             } catch (AmqpException e) {

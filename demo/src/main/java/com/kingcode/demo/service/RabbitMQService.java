@@ -68,14 +68,11 @@ public class RabbitMQService {
 
             String responseBody = new String(responseMessage.getBody());
 
-            System.out.println("Resposta que chega: " + responseBody);
             boolean success = false;
 
             if (responseBody.equals("\"true\"")) {
                 success = true;
             }
-
-            System.out.println("Success: " + success);
 
             if (success) {
                 System.out.println("[SERVER SAYS] MESSAGE HAS BEEN SENT SUCCESSFULLY! [SERVER SAYS]\n");
