@@ -33,9 +33,9 @@ public class RabbitMQService {
     
 
     @Retryable(
-            value = {AmqpException.class, JsonProcessingException.class, Exception.class}, // Especifica a(s) exceção(ões) que devem acionar o retry
+            value = {AmqpException.class, JsonProcessingException.class, Exception.class}, 
             maxAttempts = 5,
-            backoff = @Backoff(2000) // Configuração do backoff
+            backoff = @Backoff(2000) 
     )
     public ResponseEntity sendMessage(String exchange, String routingKey, Object message) {
         final String responseQueueName;

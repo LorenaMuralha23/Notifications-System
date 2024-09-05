@@ -1,0 +1,2 @@
+VHOST: /
+QUEUE: email-notification-queue

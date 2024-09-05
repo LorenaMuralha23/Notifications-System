@@ -70,24 +70,18 @@ public class EmailService {
             mailSender.send(messageToSend);
             emailSent = true;
         } catch (IllegalStateException e) {
-            System.out.println("[EMAIL SERVICE ERROR] An state error ocurred while sending the email. Trying again... [EMAIL SERVICE ERROR]");
-            throw e;
+            System.out.println("[EMAIL SERVICE ERROR] An state error ocurred while sending the email [EMAIL SERVICE ERROR]");
         } catch (MailException e) {
-            System.out.println("[EMAIL SERVICE ERROR] An email error ocurred while sending the email. Trying again... [EMAIL SERVICE ERROR]\n");
-            throw e;
+            System.out.println("[EMAIL SERVICE ERROR] An email error ocurred while sending the email [EMAIL SERVICE ERROR]\n");
         } catch (Exception e) {
-            System.out.println("[EMAIL SERVICE ERROR] An error ocurred while sending the email.  Trying again... [EMAIL SERVICE ERROR]\n");
-            throw e;
+            System.out.println("[EMAIL SERVICE ERROR] An error ocurred while sending the email [EMAIL SERVICE ERROR]\n");
         } finally {
             try {
                 String responseJSON = Boolean.toString(emailSent);
-                System.out.println("Response json: " + responseJSON);
                 rabbitTemplate.convertAndSend(RabbitMQConstants.EMAIL_RESPONSE_QUEUE_NAME, responseJSON);
                 System.out.println("[EMAIL SERVICE] Response sent to the reply queue [EMAIL SERVICE]");
-
             } catch (AmqpException e) {
                 System.out.println("[EMAIL SERVICE ERROR] Failed to process response message.  Trying again... [EMAIL SERVICE ERROR]");
-                throw e;
             }
         }
     }
