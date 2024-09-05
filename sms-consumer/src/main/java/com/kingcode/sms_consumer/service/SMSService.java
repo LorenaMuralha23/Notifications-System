@@ -16,22 +16,27 @@ public class SMSService {
 
     @Autowired
     private TwilioConfig twilioConfig;
-    
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    
+
     //Aqui será legal ter um retry
-    public void configureTwilio(String accountSid, String authToken, String phoneNumber){
+    public boolean configureTwilio(String accountSid, String authToken, String phoneNumber) {
         twilioConfig.setACCOUNT_SID(accountSid);
         twilioConfig.setAUTH_TOKEN(authToken);
         twilioConfig.setPHONE_NUMBER(phoneNumber);
-        Twilio.init(accountSid, authToken);
-        System.out.println("[SMS SERVICE SAYS] CREDENTIALS CONFIGURED SUCCESSFULLY [SMS SERVICE SAYS]");
+        try {
+            Twilio.init(accountSid, authToken);
+            System.out.println("[SMS SERVICE SAYS] CREDENTIALS CONFIGURED SUCCESSFULLY [SMS SERVICE SAYS]");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void sendSMS(String numberToSend, String smsMessage) throws Exception {
         boolean smsSent = false;
-        
+
         try {
             if (twilioConfig.getTwillioPhoneNumber() == null || twilioConfig.getTwillioPhoneNumber().isEmpty()) {
                 throw new IllegalArgumentException("[SERVICE SAYS] Invalid twillion number [SERVICE SAYS]");

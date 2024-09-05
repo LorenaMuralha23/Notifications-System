@@ -1,4 +1,4 @@
-package com.kingcode.sms_consumer.dtos;
+package com.mycompany.main.lib.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package com.kingcode.email_consumer.dtos;
+package com.mycompany.main.lib.dtos;
 
 import java.io.Serializable;
 

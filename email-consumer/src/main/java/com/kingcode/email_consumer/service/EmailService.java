@@ -34,32 +34,35 @@ public class EmailService {
     private String username;
     private String password;
 
-    public void configureEmailSender() {
+    public boolean configureEmailSender() {
+        boolean success = false;
         if (this.username != null && this.password != null) {
             this.mailSenderImpl.setUsername(username);
             this.mailSenderImpl.setPassword(password);
-            System.out.println("[EMAIL SERVER] CREDENTIALS CONFIGURED SUCCESSFULLY [EMAIL SERVER]");
+            System.out.println("[E-MAIL SERVICE] CREDENTIALS CONFIGURED SUCCESSFULLY [E-MAIL SERVICE]\n");
+            success = true;
         }
+        return success;
     }
 
-    public void updateEmailConfig(String username, String password) {
+    public boolean updateEmailConfig(String username, String password) {
         this.username = username;
         this.password = password;
-        configureEmailSender();
+        return configureEmailSender();
     }
 
     public void sendEmail(NotificationDTO notificationDTO) {
         boolean emailSent = false;
         try {
-            System.out.println("[EMAIL SERVICE] Sending e-mail...[EMAIL SERVICE]");
+            System.out.println("[EMAIL SERVICE] SENDING E-MAIL...[EMAIL SERVICE]");
             SimpleMailMessage messageToSend = new SimpleMailMessage();
 
             if (username == null || password == null) {
-                throw new IllegalStateException("[EMAIL SERVICE ERROR] Illegal Credentials [EMAIL SERVICE ERROR]");
+                throw new IllegalStateException("[EMAIL SERVICE ERROR] ILLEGAL CREDENTIALS [EMAIL SERVICE ERROR]");
             }
 
             if (this.username.equals("your-email@gmail.com") || this.password.equals("your-password")) {
-                throw new IllegalStateException("[EMAIL SERVICE ERROR] Creaditals are needed [EMAIL SERVICE ERROR]");
+                throw new IllegalStateException("[EMAIL SERVICE ERROR] CREDENTIALS ARE NEEDED [EMAIL SERVICE ERROR]");
             }
 
             messageToSend.setFrom(this.username);
@@ -70,18 +73,18 @@ public class EmailService {
             mailSender.send(messageToSend);
             emailSent = true;
         } catch (IllegalStateException e) {
-            System.out.println("[EMAIL SERVICE ERROR] An state error ocurred while sending the email [EMAIL SERVICE ERROR]");
+            e.getMessage();
         } catch (MailException e) {
-            System.out.println("[EMAIL SERVICE ERROR] An email error ocurred while sending the email [EMAIL SERVICE ERROR]\n");
+            System.out.println("[EMAIL SERVICE ERROR] AN E-MAIL EXCEPTION OCURRED WHILE SENDING THE E-MAIL [EMAIL SERVICE ERROR]\n");
         } catch (Exception e) {
-            System.out.println("[EMAIL SERVICE ERROR] An error ocurred while sending the email [EMAIL SERVICE ERROR]\n");
+            System.out.println("[EMAIL SERVICE ERROR] AN ERROR OCURRED WHILE SENDING THE E-MAIL [EMAIL SERVICE ERROR]\n");
         } finally {
             try {
                 String responseJSON = Boolean.toString(emailSent);
                 rabbitTemplate.convertAndSend(RabbitMQConstants.EMAIL_RESPONSE_QUEUE_NAME, responseJSON);
-                System.out.println("[EMAIL SERVICE] Response sent to the reply queue [EMAIL SERVICE]");
+                System.out.println("[EMAIL SERVICE] RESPONSE SENT TO THE REPLY QUEUE [EMAIL SERVICE]\n");
             } catch (AmqpException e) {
-                System.out.println("[EMAIL SERVICE ERROR] Failed to process response message.  Trying again... [EMAIL SERVICE ERROR]");
+                System.out.println("[EMAIL SERVICE ERROR] FAILED TO PROCESS RESPONSE MESSAGE [EMAIL SERVICE ERROR]\n");
             }
         }
     }

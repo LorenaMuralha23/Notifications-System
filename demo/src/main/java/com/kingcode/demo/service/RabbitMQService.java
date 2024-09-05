@@ -44,7 +44,7 @@ public class RabbitMQService {
             String messageJSON = this.objectMapper.writeValueAsString(message);
             
 
-            System.out.println("[SERVER SAYS] SENDING MESSAGE... [SERVER SAYS]\n");
+            System.out.println("[SERVER SAYS] SENDING MESSAGE... [SERVER SAYS]");
 
             if (exchange.equals(RabbitMQConstants.EMAIL_EXCHANGE_NAME)) {
                 responseQueueName = RabbitMQConstants.EMAIL_RESPONSE_QUEUE_NAME;
@@ -99,7 +99,7 @@ public class RabbitMQService {
     @Recover
     public ResponseEntity recover(AmqpException ex, String exchange, String routingKey, Object message) {
         System.out.println("[SERVER SAYS] ALL RETRIES FAILED. PLEASE, TRY AGAIN LATER. [SERVER SAYS]");
-        return new ResponseEntity("[SERVER SAYS] An internal error occurred while sending your message. Please try again later [SERVER SAYS]", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity("[SERVER SAYS] an INTERNAL ERROR OCCURRED WHILE SENDING YOUR MESSAGE. PLEASE TRY AGAIN LATER [SERVER SAYS]", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
