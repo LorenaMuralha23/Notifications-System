@@ -10,7 +10,7 @@ I would greatly appreciate any feedback you can provide about the project, code,
 
 Email-me: marialorenamuralhalima2301@gmail.com
 
-Connect with me at <a href="www.linkedin.com/in/dev-maria-lorena">LinkedIn</a>
+Connect with me at <a href="[www.linkedin.com/in/dev-maria-lorena](https://www.linkedin.com/in/maria-lorena-muralha-lima-093a13234/)">LinkedIn</a>
 
 Also, you can use this Project as you wish!
 
@@ -216,6 +216,6 @@ Feel free to send as many pull requests (PRs) as you like; I'll be happy to revi
 
 Email-me: marialorenamuralhalima2301@gmail.com
 
-Connect with me at <a href="www.linkedin.com/in/dev-maria-lorena">LinkedIn</a>
+Connect with me at <a href="[www.linkedin.com/in/dev-maria-lorena](https://www.linkedin.com/in/maria-lorena-muralha-lima-093a13234/)">LinkedIn</a>
 
 Thank you!
