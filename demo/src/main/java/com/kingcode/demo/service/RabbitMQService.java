@@ -38,7 +38,7 @@ public class RabbitMQService {
             String correlationId = UUID.randomUUID().toString();
             String messageJSON = this.objectMapper.writeValueAsString(message);
 
-            System.out.println("[SERVER SAYS] SENDING MESSAGE... [SERVER SAYS]");
+            System.out.println("\n[SERVER SAYS] SENDING MESSAGE... [SERVER SAYS]");
 
             String responseQueueName = getResponseQueueName(exchange);
 
