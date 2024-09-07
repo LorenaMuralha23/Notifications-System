@@ -20,7 +20,6 @@ public class SMSService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    //Aqui será legal ter um retry
     public boolean configureTwilio(String accountSid, String authToken, String phoneNumber) {
         twilioConfig.setACCOUNT_SID(accountSid);
         twilioConfig.setAUTH_TOKEN(authToken);

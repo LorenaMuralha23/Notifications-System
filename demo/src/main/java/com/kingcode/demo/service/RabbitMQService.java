@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.main.lib.constants.RabbitMQConstants;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.concurrent.TimeoutException;
 import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -29,29 +27,21 @@ public class RabbitMQService {
 
     @Autowired
     private ObjectMapper objectMapper;
-    
-    
 
     @Retryable(
-            value = {AmqpException.class, JsonProcessingException.class, Exception.class}, 
+            value = {AmqpException.class},
             maxAttempts = 5,
-            backoff = @Backoff(2000) 
+            backoff = @Backoff(30000)
     )
-    public ResponseEntity sendMessage(String exchange, String routingKey, Object message) {
-        final String responseQueueName;
+    public ResponseEntity sendMessageOnce(String exchange, String routingKey, Object message) throws JsonProcessingException, AmqpException {
         try {
             String correlationId = UUID.randomUUID().toString();
             String messageJSON = this.objectMapper.writeValueAsString(message);
-            
 
             System.out.println("[SERVER SAYS] SENDING MESSAGE... [SERVER SAYS]");
 
-            if (exchange.equals(RabbitMQConstants.EMAIL_EXCHANGE_NAME)) {
-                responseQueueName = RabbitMQConstants.EMAIL_RESPONSE_QUEUE_NAME;
-            }else{
-                 responseQueueName = RabbitMQConstants.SMS_RESPONSE_QUEUE_NAME;
-            }
-            
+            String responseQueueName = getResponseQueueName(exchange);
+
             this.rabbitTemplate.convertAndSend(exchange, routingKey, messageJSON, m -> {
                 m.getMessageProperties().setContentType("application/json");
                 m.getMessageProperties().setCorrelationId(correlationId);
@@ -59,47 +49,53 @@ public class RabbitMQService {
                 return m;
             });
 
-            Message responseMessage = rabbitTemplate.receive(responseQueueName, TimeUnit.SECONDS.toMillis(60));
+            return new ResponseEntity("Success", HttpStatus.OK);
+        } catch (AmqpException e) {
+            System.out.println("[SERVER SAYS] RABBITMQ CONNECTION ERROR OCCURRED. TRYING AGAIN... [SERVER SAYS]\n");
+            throw e;
+        }
+    }
 
-            if (responseMessage == null) {
-                System.out.println("[SERVER SAYS] NO RESPONSE RECEIVED, TIMEOUT [SERVER SAYS]\n");
-                return new ResponseEntity("[SERVER SAYS] No response received, please try again later [SERVER SAYS]", HttpStatus.REQUEST_TIMEOUT);
-            }
+    @Retryable(
+            value = {TimeoutException.class},
+            maxAttempts = 5,
+            backoff = @Backoff(30000)
+    )
+    public ResponseEntity waitForResponse(String exchange) throws TimeoutException, JsonProcessingException {
+        System.out.println("[SERVER SAYS] WAITING FOR RESPONSE... [SERVER SAYS]");
 
-            String responseBody = new String(responseMessage.getBody());
+        String responseQueueName = getResponseQueueName(exchange);
 
-            boolean success = false;
+        Message responseMessage = rabbitTemplate.receive(responseQueueName, TimeUnit.SECONDS.toMillis(10));
 
-            if (responseBody.equals("\"true\"")) {
-                success = true;
-            }
-
-            if (success) {
-                System.out.println("[SERVER SAYS] MESSAGE HAS BEEN SENT SUCCESSFULLY! [SERVER SAYS]\n");
-                return new ResponseEntity("[SERVER SAYS] Your message has been sent successfully [SERVER SAYS]", HttpStatus.OK);
-            } else {
-                System.out.println("[SERVER SAYS] FAILED TO SEND MESSAGE! [SERVER SAYS]\n");
-                return new ResponseEntity("[SERVER SAYS] Failed to send your message, please try again later [SERVER SAYS]", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
-        } catch (JsonProcessingException ex) {
-            System.out.println("[SERVER ERROR] Error processing JSON. Trying again... [SERVER ERROR]\n");
-            throw new RuntimeException("Error processing JSON", ex);
-        } catch (AmqpException ex) {
-            System.out.println("[SERVER ERROR] Error sending message to RabbitMQ. Trying again... [SERVER ERROR]\n");
-            System.out.println(ex.getMessage());
-            throw ex;
-        } catch (Exception ex) {
-            System.out.println("[SERVER ERROR] Unexpected error. Trying again... [SERVER ERROR]\n");
-            throw new RuntimeException("Unexpected error", ex);
+        if (responseMessage == null) {
+            throw new TimeoutException("[SERVER SAYS] NO RESPONSE RECEIVED, TIMEOUT. [SERVER SAYS]");
         }
 
+        String responseBody = new String(responseMessage.getBody());
+        boolean success = responseBody.equals("\"true\"");
+
+        if (success) {
+            System.out.println("[SERVER SAYS] MESSAGE HAS BEEN SENT SUCCESSFULLY! [SERVER SAYS]\n");
+            return new ResponseEntity("[SERVER SAYS] Your message has been sent successfully [SERVER SAYS]", HttpStatus.OK);
+        } else {
+            System.out.println("[SERVER SAYS] FAILED TO SEND MESSAGE! [SERVER SAYS]\n");
+            return new ResponseEntity("[SERVER SAYS] Failed to send your message, please try again later [SERVER SAYS]", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Recover
-    public ResponseEntity recover(AmqpException ex, String exchange, String routingKey, Object message) {
+    public ResponseEntity recoverTimeoutException(TimeoutException ex, String exchange, String routingKey, Object message) throws JsonProcessingException {
         System.out.println("[SERVER SAYS] ALL RETRIES FAILED. PLEASE, TRY AGAIN LATER. [SERVER SAYS]");
-        return new ResponseEntity("[SERVER SAYS] an INTERNAL ERROR OCCURRED WHILE SENDING YOUR MESSAGE. PLEASE TRY AGAIN LATER [SERVER SAYS]", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity("[SERVER SAYS] AN INTERNAL ERROR OCCURRED WHILE SENDING YOUR MESSAGE. WE WILL INVESTIGATE THE CAUSE. PLEASE TRY AGAIN LATER [SERVER SAYS]", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private String getResponseQueueName(String exchange) {
+        if (exchange.equals(RabbitMQConstants.EMAIL_EXCHANGE_NAME)) {
+            return RabbitMQConstants.EMAIL_RESPONSE_QUEUE_NAME;
+        } else {
+            return RabbitMQConstants.SMS_RESPONSE_QUEUE_NAME;
+        }
     }
 
 }
