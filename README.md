@@ -42,13 +42,13 @@ git clone https://github.com/LorenaMuralha23/Notifications-System.git
 2. Open your terminal and navigate to the directory where you cloned the project, then go to /Docker/RabbitMQ using:
 
 ```bash
-    cd where-you-cloned\Notification-System\Docker\RabbitMQ
+cd where-you-cloned\Notification-System\Docker\RabbitMQ
 ```
 
 3. Run the docker image by using this command
 
 ```bash
-    docker-compose up -d
+docker-compose up -d
 ```
 
 ## Running the Development environment 🖥️
@@ -60,13 +60,13 @@ Replace "where-you-cloned" with the path to the directory where you cloned the r
 1. Navigate to the /target directory of the server using this command:
 
 ```bash
-    cd where-you-cloned\Notification-System\demo\target
+cd where-you-cloned\Notification-System\demo\target
 ```
 
 2. Run this command to start the server:
 
 ```bash
-    java -jar demo-0.0.1-SNAPSHOT.jar
+java -jar demo-0.0.1-SNAPSHOT.jar
 ```
 
 ### Running the e-mail service
@@ -74,13 +74,13 @@ Replace "where-you-cloned" with the path to the directory where you cloned the r
 1. Navigate to the /target directory of the email service using this command:
 
 ```bash
-    cd where-you-cloned\Notification-System\email-consumer\target
+cd where-you-cloned\Notification-System\email-consumer\target
 ```
 
 2. Run this command to start the email microservice:
 
 ```bash
-    java -jar email-consumer-0.0.1-SNAPSHOT.jar
+java -jar email-consumer-0.0.1-SNAPSHOT.jar
 ```
 
 ### Running the SMS service
@@ -88,13 +88,13 @@ Replace "where-you-cloned" with the path to the directory where you cloned the r
 1. Navigate to the /target directory of the SMS service using this command:
 
 ```bash
-    cd where-you-cloned\Notification-System\sms-consumer\target
+cd where-you-cloned\Notification-System\sms-consumer\target
 ```
 
 2. Run this command to start the SMS microservice:
 
 ```bash
-    java -jar sms-consumer-0.0.1-SNAPSHOT.jar
+java -jar sms-consumer-0.0.1-SNAPSHOT.jar
 ```
 
 ## Testing the API 🧪
@@ -110,7 +110,7 @@ For testing the email service, you need your Gmail app credentials (email addres
 1. Configure your credentials before using the service. You can do this by sending a POST request to the following address:
 
 ```bash
-    http://localhost:8080/api/notification/email/config
+http://localhost:8080/api/notification/email/config
 ```
 
 and sending a JSON with this structure:
@@ -127,7 +127,7 @@ Replace "xxxx yyyy aaaa bbbb" with your App password.
 2. Now you can send email notifications using this address:
 
 ```bash
-    http://localhost:8080/api/notification/send
+http://localhost:8080/api/notification/send
 ```
 
 and a JSON with this structure:
@@ -149,7 +149,7 @@ For testing the SMS service, you need your Twilio credentials (Account SID, Auth
 1. Configure your credentials before using the service. You can do this by sending a POST request to the following address:
 
 ```bash
-    http://localhost:8080/api/notification/sms/config
+http://localhost:8080/api/notification/sms/config
 ```
 
 and sending a JSON with this structure:
@@ -165,7 +165,7 @@ and sending a JSON with this structure:
 1. Now you can send SMS notifications using this address:
 
 ```bash
-    http://localhost:8080/api/notification/send
+http://localhost:8080/api/notification/send
 ```
 
 and a JSON with this structure:
