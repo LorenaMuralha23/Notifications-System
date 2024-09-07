@@ -24,7 +24,7 @@ It's free!
 ## Prerequisites 📜
 
 - Java 17.0.10 or higher
-- Docker
+- Docker and Docker Desktop
 - Twilio Account and Credentials (if you don't have a Twilio account or need help obtaining credentials, you can follow this tutorial: <a href="https://youtu.be/gmONYJBAp44">Twilio Tutorial</a>
 - Gmail account and App password (if you don't know how to get the app password from your Gmail account, you can follow this tutorial: <a href="https://youtu.be/2D8jpws-4hA">G-Mail Tutorial</a>
 - A software to test HTTP requests (e.g., Postman)
@@ -179,6 +179,22 @@ and a JSON with this structure:
     "deliveryMethodCode": 2
 }
 ```
+
+<br>
+<br>
+
+# Aditional 🧩
+
+If you want to monitor the message traffic in RabbitMQ, you can access the RabbitMQ Management interface at:
+
+```bash
+http://localhost:15672
+```
+
+Use these credentials:
+
+- **username**: admin
+- **password**: 123456
 
 <br>
 <br>
